@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/ python3
 """
 The Python code you will write for this module should read
 acceleration data from the IMU. When a reading comes in that surpasses
@@ -24,7 +24,8 @@ from picamera2 import Picamera2
 
 # VARIABLES
 THRESHOLD = 5  # Any desired value from the accelerometer
-REPO_PATH = ""  # Your github repo path: ex. /home/pi/FlatSatChallenge
+# Your github repo path: ex. /home/pi/FlatSatChallenge
+REPO_PATH = "/home/pi/Projects/Winton-Satalite-Squad"
 FOLDER_PATH = "/Images"  # Your image folder path in your GitHub repo: ex. /Images
 
 # imu and camera initialization
@@ -72,21 +73,7 @@ def take_photo():
     """
     while True:
         accelx, accely, accelz = accel_gyro.acceleration
-
-        # CHECKS IF READINGS ARE ABOVE THRESHOLD
-        if (accelx > THRESHOLD | accely > THRESHOLD | accelz > THRESHOLD):
-            # PAUSE
-            picam2.start()
-            time.sleep(2)
-            # name = ""     #First Name, Last Initial  ex. MasonM
-            name = "KatieK"
-            # TAKE PHOTO
-            picam2.capture_file(img_gen(name))
-            # PUSH PHOTO TO GITHUB
-            git_push()
-
-        # PAUSE
-            time.sleep(2)
+        print(accelx + " " + accely + " " + accelz)
 
 
 def main():
