@@ -22,6 +22,8 @@ from adafruit_lis3mdl import LIS3MDL
 from git import Repo
 from picamera2 import Picamera2
 
+from datetime import date
+
 # VARIABLES
 THRESHOLD = 5  # Any desired value from the accelerometer
 # Your github repo path: ex. /home/pi/FlatSatChallenge
@@ -54,7 +56,7 @@ def git_push():
         print('Couldn\'t upload to git')
 
 
-def img_gen(name):
+def img_name_gen(name):
     """
     This function is complete. Generates a new image name.
 
@@ -65,16 +67,39 @@ def img_gen(name):
     imgname = (f'{REPO_PATH}/{FOLDER_PATH}/{name}{t}.jpg')
     return imgname
 
-
 def take_photo():
     """
     This function is NOT complete. Takes a photo when the FlatSat is shaken.
     Replace psuedocode with your own code.
     """
+
+    #Index 0 is the count since last photo, and index 1 is for lastest, index 2 is for second latest, etc etc. 
+    lastphoto = [0,-1,-1,-1]
+    
     while True:
         accelx, accely, accelz = accel_gyro.acceleration
         print(accelx + " " + accely + " " + accelz)
+        acceltotal = accelx + accely + accelz
+        if (acceltotal > THRESHOLD):
+            camera_config = Picamera2.create_still_configuration
+            picam2.configure(camera_config)
+            picam2.capture_file(img_name_gen(str(date.today())))
+            
+            lastphoto[0] = 0
+            lastphoto[3] = lastphoto[2]
+            lastphoto[2] = lastphoto[1]
+            lastphoto[1] = 0
+        time.sleep(1)
 
+        #Meant to check if a slot is active/if a 1st second or third latest photo have been taken
+        for index, x in enumerate(lastphoto):
+            if x >= 0 
+                lastphoto[index] = lastphoto[index] + 1
+
+        #Checks if the average time between the last three photos was equal to or less than 2 second.
+        if (lastphoto[3] != -1 and (lastphoto[0] - lastphoto[1] - lastphoto[2] - lastphoto[3]) / 4 <= 2) :
+            print("Abnormal amount of photos taken within a couple second. Please update Threshold or check on SAT")
+        
 
 def main():
     take_photo()
