@@ -11,12 +11,13 @@ The provided functions are only for reference, you do not need to use them.
 You will need to complete the take_photo() function and configure the VARIABLES section
 """
 
-# AUTHOR:
-# DATE:
+# AUTHOR: @Earl Chan, @Hudson Hilal
+# DATE: 2/18/2024
 
 # import libraries
 import time
 import board
+import math
 from adafruit_lsm6ds.lsm6dsox import LSM6DSOX as LSM6DS
 from adafruit_lis3mdl import LIS3MDL
 from git import Repo
@@ -79,26 +80,28 @@ def take_photo():
     while True:
         accelx, accely, accelz = accel_gyro.acceleration
         print(accelx + " " + accely + " " + accelz)
-        acceltotal = accelx + accely + accelz
-        if (acceltotal > THRESHOLD):
+        accelmagnitude = math.sqrt(accelx**2 + accely**2 + accelz**2)
+        if (accelmagnitude > THRESHOLD):
             camera_config = Picamera2.create_still_configuration
             picam2.configure(camera_config)
-            picam2.capture_file(img_name_gen(str(date.today())))
+            picam2.options["quality"] = 95
+            picam2.start_and_capture_file(img_name_gen(str(date.today())))
             
             lastphoto[0] = 0
             lastphoto[3] = lastphoto[2]
             lastphoto[2] = lastphoto[1]
             lastphoto[1] = 0
-        time.sleep(1)
+        
+        time.sleep(2) #time meant for camera sleep and processing
 
         #Meant to check if a slot is active/if a 1st second or third latest photo have been taken
         for index, x in enumerate(lastphoto):
-            if x >= 0 
+            if x >= 0:
                 lastphoto[index] = lastphoto[index] + 1
 
         #Checks if the average time between the last three photos was equal to or less than 2 second.
         if (lastphoto[3] != -1 and (lastphoto[0] + lastphoto[1] + lastphoto[2] + lastphoto[3]) / 4 <= 2) :
-            print("Abnormal amount of photos taken within a couple second. Please update Threshold or check on SAT")
+            print("Abnormal amount of photos taken within a couple seconds. Please update Threshold or check on SAT")
         
 
 def main():
