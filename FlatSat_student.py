@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """
 The Python code you will write for this module should read
 acceleration data from the IMU. When a reading comes in that surpasses
@@ -10,10 +11,10 @@ The provided functions are only for reference, you do not need to use them.
 You will need to complete the take_photo() function and configure the VARIABLES section
 """
 
-#AUTHOR: 
-#DATE:
+# AUTHOR:
+# DATE:
 
-#import libraries
+# import libraries
 import time
 import board
 from adafruit_lsm6ds.lsm6dsox import LSM6DSOX as LSM6DS
@@ -21,12 +22,12 @@ from adafruit_lis3mdl import LIS3MDL
 from git import Repo
 from picamera2 import Picamera2
 
-#VARIABLES
-THRESHOLD = 5      #Any desired value from the accelerometer
-REPO_PATH = ""     #Your github repo path: ex. /home/pi/FlatSatChallenge
-FOLDER_PATH = "/Images"   #Your image folder path in your GitHub repo: ex. /Images
+# VARIABLES
+THRESHOLD = 5  # Any desired value from the accelerometer
+REPO_PATH = ""  # Your github repo path: ex. /home/pi/FlatSatChallenge
+FOLDER_PATH = "/Images"  # Your image folder path in your GitHub repo: ex. /Images
 
-#imu and camera initialization
+# imu and camera initialization
 i2c = board.I2C()
 accel_gyro = LSM6DS(i2c)
 mag = LIS3MDL(i2c)
@@ -72,19 +73,19 @@ def take_photo():
     while True:
         accelx, accely, accelz = accel_gyro.acceleration
 
-        #CHECKS IF READINGS ARE ABOVE THRESHOLD
-        if(accelx > THRESHOLD | accely > THRESHOLD | accelz > THRESHOLD):
-            #PAUSE
+        # CHECKS IF READINGS ARE ABOVE THRESHOLD
+        if (accelx > THRESHOLD | accely > THRESHOLD | accelz > THRESHOLD):
+            # PAUSE
             picam2.start()
             time.sleep(2)
-            #name = ""     #First Name, Last Initial  ex. MasonM
-            name  = "KatieK"
-            #TAKE PHOTO
+            # name = ""     #First Name, Last Initial  ex. MasonM
+            name = "KatieK"
+            # TAKE PHOTO
             picam2.capture_file(img_gen(name))
-            #PUSH PHOTO TO GITHUB
+            # PUSH PHOTO TO GITHUB
             git_push()
 
-        #PAUSE
+        # PAUSE
             time.sleep(2)
 
 
