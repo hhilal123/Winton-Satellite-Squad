@@ -97,7 +97,7 @@ def take_photo():
                 lastphoto[index] = lastphoto[index] + 1
 
         #Checks if the average time between the last three photos was equal to or less than 2 second.
-        if (lastphoto[3] != -1 and (lastphoto[0] - lastphoto[1] - lastphoto[2] - lastphoto[3]) / 4 <= 2) :
+        if (lastphoto[3] != -1 and (lastphoto[0] + lastphoto[1] + lastphoto[2] + lastphoto[3]) / 4 <= 2) :
             print("Abnormal amount of photos taken within a couple second. Please update Threshold or check on SAT")
         
 
